@@ -1,2 +1,2 @@
 ## metacraft
-This repository contains assessments required to pass complete the courses offered by netacrafters academy
+This repository contains assessments required to complete the courses offered by netacrafters academy
