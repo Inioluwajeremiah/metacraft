@@ -1,4 +1,4 @@
-# MyToken
+# Voting
 
 This Solidity program is a simple program that uses the Solidity programming language to demonstrate some smart contract functionalities on the use of the require, assert and revert keywords.
 
