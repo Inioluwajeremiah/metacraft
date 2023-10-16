@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.17;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract IAToken is ERC20 {
+contract PhyToken is ERC20 {
     address private _owner;
 
-    constructor() ERC20("IAToken", "IAT") {
+    constructor() ERC20("PhyToken", "PHT") {
         _owner = msg.sender;
     }
 

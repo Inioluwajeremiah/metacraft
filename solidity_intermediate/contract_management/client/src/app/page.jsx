@@ -2,6 +2,9 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import {ThreeFunctionsAbi} from '../../utils/abi.js';
+import {chemAbi} from '../../utils/chemAbi.js'
+import {ichAbi} from '../../utils/ichAbi.js'
+
 
 export default function Home() {
 
@@ -12,6 +15,17 @@ export default function Home() {
   const [recipientAddress, setRecipientAddress] = useState('');
   const [transferAmount, setTransferAmount] = useState(0);
   const [balance,  setBalance] = useState(null);
+  const [contractTokenBalance,  setContractTokenBalance] = useState(null);
+
+  const [symbol, setSymbol] = useState('');
+  const [name, setName] = useState('');
+  const [totalSupply, setTotalSupply] = useState('');
+  const [blockAddress, setBlockAddress] = useState('')
+
+  
+  // ichToken contract address => 0x830e5B4eb9A440A1B769c960AFb841E8829f66F2
+  // ChemToken contract address => 0x1099f648cb1B903bbB5483cf15DeA03Ca74B29cC
+  // Phytoken contract address => 0x8e66B5C46c658d1E44335fE3bF8ab186980330aA
 
   const ConnectWallet = async () => {
     setLoading(false)
@@ -29,9 +43,23 @@ export default function Home() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         // get signer
         const signer = provider.getSigner();
-        const blockAddress = "0x39d393CC041eC3422D0422D232A8592698693966"
-        const tfContract = new ethers.Contract(blockAddress, ThreeFunctionsAbi, signer);
+        const blockAddress = "0x830e5B4eb9A440A1B769c960AFb841E8829f66F2"
+        // chem block address = "0x830e5B4eb9A440A1B769c960AFb841E8829f66F2"
+        // setBlockAddress(blockAddress)
+        // "0x39d393CC041eC3422D0422D232A8592698693966"
+        const tfContract = new ethers.Contract(blockAddress, ichAbi, signer);
         setContract(tfContract)
+
+        const symbol = tfContract.symbol();
+        const name = tfContract.name();
+        const totalSupply = await tfContract.totalSupply();
+        const balance = await tfContract.balanceOf(blockAddress);
+        setContractTokenBalance(balance.toString())
+
+        setSymbol(symbol);
+        setName(name);
+        setTotalSupply(totalSupply.toString());
+
       } else {
         alert('Install wallet to continue')
       }
@@ -52,7 +80,8 @@ export default function Home() {
       }
       else {
         // const parsedAmount = ethers.utils.parseEther(tokenAmount)
-        await contract.mintToken(tokenAmount)
+        const token_amt = ethers.utils.parseEther(tokenAmount)
+        await contract.mintToken(blockAddress, token_amt)
         setLoading(false);
         alert(`token (${tokenAmount}) minted successfully`)
       }
@@ -97,12 +126,9 @@ export default function Home() {
           alert("Connect wallet to continue")
         }
         else {
-       
-          setBalance((await contract.getBalance(walletAddress)).toNumber());
-          
+          setBalance((await contract.balanceOf(walletAddress)).toNumber());
         }
     }
-
 
   
   return (
@@ -125,6 +151,21 @@ export default function Home() {
         </div>
         
         <div className='mt-8 w-[90%] mx-auto bg-gray-100 rounded-md flex flex-col p-4'>
+          <p>{name}</p>
+          <p>{symbol}</p>
+          <p>{totalSupply.toString()}</p>
+          <p>{balance}</p>
+          <p>{contractTokenBalance}</p>
+        </div>
+        <div className='mt-8 w-[90%] mx-auto bg-gray-100 rounded-md flex flex-col p-4'>
+
+        <input 
+            type="text" 
+            placeholder='Recipient address' 
+            onChange={(bla) => setBlockAddress(bla.target.value.trim())}
+            className=' outline-none p-2 mb-2'
+          />
+
           <input type="number" 
             placeholder='Enter amount to mint' 
             onChange={(amt) => setTokenAmount(amt.target.value.trim())}
