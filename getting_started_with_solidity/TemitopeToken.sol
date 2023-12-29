@@ -15,11 +15,11 @@ pragma solidity 0.8.18;
        to the amount that is supposed to be burned.
 */
 
-contract MyToken {
+contract TemitopeToken {
 
     // public variables here
-    string public token_name = 'AdewaraToken';
-    string public token_symbol = 'ADT';
+    string public token_name = 'TemitopeToken';
+    string public token_symbol = 'TTT';
     uint public total_supply = 0;
 
     // mapping variable here
